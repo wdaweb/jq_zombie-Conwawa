@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            background: #333;
+        }
+
+        #container {
+            position: relative;
+            background: url(./扭蛋機/gashapon.png);
+            background-repeat: no-repeat;
+            background-size: 700px 700px;
+            margin: auto;
+            width: 700px;
+            height: 700px;
+        }
+
+        #game {
+            position: absolute;
+            left: 131px;
+            top: 131px;
+            width: 437px;
+            height: 263px;
+            background: rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+        }
+
+        #game>img {
+            height: 85px;
+            position: absolute;
+            user-select: none;
+            -webkit-user-drag: none;
+        }
+
+        #btn {
+            position: absolute;
+            left: 191px;
+            top: 431px;
+        }
+
+        #btn:hover {
+            cursor: pointer;
+        }
+
+        #btn img {
+            width: 120px;
+            height: 120px;
+        }
+
+        @keyframes button-rotate {
+            from {
+                transform: rotate(0deg);
+            }
+
+            70% {
+                transform: rotate(90deg);
+            }
+
+            to {
+                transform: rotate(0deg);
+            }
+        }
+
+        .animation-btn {
+            animation-name: button-rotate;
+            animation-duration: 2s;
+            animation-iteration-count: 1;
+        }
+
+        @keyframes gacha {
+            from {
+                transform: scale(0.8);
+            }
+
+            to {
+                transform: scale(1.25)
+            }
+        }
+
+        .animation-big {
+            animation-name: gacha;
+            animation-duration: 2s;
+            animation-iteration-count: 1;
+        }
+
+        @keyframes fadein {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .animation-fadein {
+            animation-name: fadein;
+            animation-duration: 2s;
+            animation-iteration-count: 1;
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+
+            to {
+                opacity: 0;
+            }
+        }
+
+        .animation-fadeout {
+            animation-name: fadeOut;
+            animation-duration: 2s;
+            animation-iteration-count: 1;
+        }
+
+        #fixed {
+            width: 108px;
+            position: absolute;
+            left: 410px;
+            top: 508px;
+            display: none;
+        }
+
+        #text {
+            width: 700px;
+            height: 400px;
+            background: url(./cat-background.jpeg);
+            background-repeat: no-repeat;
+            background-size: 700px 400px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: none;
+        }
+
+        .content {
+            position: absolute;
+            left: 100px;
+            top: 200px;
+            font-size: 20px;
+            color: aliceblue;
+        }
+
+        .none {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="container">
+        <div id="game"></div>
+        <div id="btn" ondblclick=""><img src="./扭蛋機/button.png"></div>
+        <img src="./扭蛋機/Gacha2.png" id="fixed">
+    </div>
+    <div id="text" class="animation-fadein">
+        <div class="content none">十年後被戴綠帽</div>
+        <div class="content none">一輩子穩定母胎單身</div>
+        <div class="content none">終身當個馬子狗</div>
+        <div class="content none">幸福美滿可喜可賀</div>
+        <div class="content none">天機不可洩漏</div>
+        <div class="content none">由申甲</div>
+        <div class="content none">會有阿姨讓你以後不用努力</div>
+
+    </div>
+
+    <script src="./jquery-3.6.4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+    <script>
+
+        while ($('.gacha').length < 7) {
+            const top = Math.round(Math.random() * 100) + '%'
+            const left = Math.round(Math.random() * 100) + '%'
+            const gacha = $(`<img src="./扭蛋機/Gacha1.png" class="gacha" style="top:${top};left:${left}">`)
+            $('#game').append(gacha)
+            move(gacha)
+        }
+
+        function move(gacha) {
+            //隨機位置
+            const top = Math.round(Math.random() * 100) + '%'
+            const left = Math.round(Math.random() * 100) + '%'
+            gacha.animate({ top, left }, 2000, function () {
+                move(gacha)
+            })
+        }
+
+        $('#btn').click(function () {
+            $('#fixed').addClass('animation-big')
+            $('#fixed').css('display', 'block')
+            $('#btn').addClass('animation-btn')
+            $('.content').each(function (index, element) {
+                $(this).addClass('none')
+            })
+            const random = Math.round(Math.random() * 6)
+            $('.content').eq(random).removeClass('none')
+
+            setTimeout(function () {
+                $('#text').css('display', 'block')
+            }, 2000)
+
+            let timer = setTimeout(function () {
+                $('#btn').removeClass('animation-btn')
+                $('#fixed').removeClass('animation-big')
+                $('#text').removeClass('animation-fadein')
+                $('#text').addClass('animation-fadeout')
+                setTimeout(() => {
+                    $('#text').removeClass('animation-fadeout')
+                    $('#text').css('display', 'none')
+                }, 2000)
+            }, 4000)
+        })
+
+
+        // const btn = document.querySelector('#btn')
+        // const fixed = document.querySelector('#fixed')
+        // const text = document.querySelector('#text')
+        // const contents = document.querySelectorAll('.content')
+        // btn.addEventListener('click', () => {
+            // fixed.classList.add('animation-big')
+            // fixed.style.display = 'block'
+            // btn.classList.add('animation-btn')
+
+            // contents.forEach((content, index) => {
+                // content.classList.add('none')
+            // })
+            // const random = Math.round(Math.random() * 6)
+            // contents[random].classList.remove("none")
+            // setTimeout(() => {
+            //     text.style.display = 'block';
+            // }, 2000)
+            // let timer = setTimeout(() => {
+            //     btn.classList.remove('animation-btn')
+            //     fixed.classList.remove('animation-big')
+            //     fixed.style.display = 'none'
+            //     text.style.display = 'none'
+            // }, 4000)
+
+    </script>
+
+</body>
+
+</html>
